@@ -21,6 +21,12 @@ Paleta do prompt (azul #1D465A, laranja #E08E58, fundo #F5F7F9, texto #24333D, v
 ## Gerador do currículo
 Detecta títulos de seções (experiência, formação, competências, idiomas, certificações, resumo...), normaliza títulos em maiúsculas, ordena seções padrão, preserva o texto original de cada linha; cabeçalho = linhas antes da primeira seção; conteúdo não classificado vai para "Outras informações" — nada é inventado nem descartado.
 
+## Ajustes aprovados
+- Extração: dicionário técnico combinado com requisitos explícitos da vaga (linhas de requisitos/qualificações); filtro de termos genéricos para evitar falsos positivos; "encontrado" significa apenas menção textual, nunca comprovação de experiência.
+- Currículo: blocos de experiência (cargo, empresa, período, atividades) mantidos intactos e na ordem original; apenas seções são reordenadas; teste garante que toda linha original não vazia aparece no resultado.
+- Arquitetura: estrutura existente (TanStack Start/Vite já do projeto); fonte via `<link>` no head da rota raiz e metadados via `head()` — sem bibliotecas extras.
+- Conclusão só após build sem erros e testes Vitest executados.
+
 ## Detalhes técnicos
 - `src/lib/cvmatch/` : `normalize.ts`, `extract.ts`, `score.ts`, `recommendations.ts`, `resume.ts`, `pdf.ts`, `dictionary.ts`.
 - `src/components/cvmatch/` : Stepper, InputStep, ResultsStep, SuggestionsStep, ResumeStep, Notices.
