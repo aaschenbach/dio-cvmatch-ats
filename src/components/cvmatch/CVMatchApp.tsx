@@ -85,7 +85,7 @@ function Field(props: {
   value: string;
   onChange: (v: string) => void;
   placeholder: string;
-  error?: string;
+  error?: string | undefined;
 }) {
   return (
     <div className="flex flex-col gap-2">
@@ -117,6 +117,7 @@ function validate(text: string, what: string): string | undefined {
   const t = text.trim();
   if (!t) return `Preencha ${what}.`;
   if (t.length < MIN_CHARS) return `Texto muito curto: informe pelo menos ${MIN_CHARS} caracteres em ${what}.`;
+  return undefined;
 }
 
 function KeywordList({ items, variant }: { items: MatchedRequirement[]; variant: "success" | "missing" }) {
@@ -137,7 +138,7 @@ export function CVMatchApp() {
   const [step, setStep] = useState(0);
   const [job, setJob] = useState("");
   const [cv, setCv] = useState("");
-  const [errors, setErrors] = useState<{ job?: string; cv?: string }>({});
+  const [errors, setErrors] = useState<{ job?: string | undefined; cv?: string | undefined }>({});
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [generated, setGenerated] = useState("");
   const [edited, setEdited] = useState("");

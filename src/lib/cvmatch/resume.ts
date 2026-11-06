@@ -104,10 +104,10 @@ export function parseResume(text: string): ParsedResume {
 function trimBlank(lines: string[]): string[] {
   let s = 0;
   let e = lines.length;
-  while (s < e && lines[s].trim() === "") s++;
-  while (e > s && lines[e - 1].trim() === "") e--;
+  while (s < e && (lines[s] ?? "").trim() === "") s++;
+  while (e > s && (lines[e - 1] ?? "").trim() === "") e--;
   // colapsa várias linhas em branco seguidas em uma
-  return lines.slice(s, e).filter((l, i, arr) => !(l.trim() === "" && i > 0 && arr[i - 1].trim() === ""));
+  return lines.slice(s, e).filter((l, i, arr) => !(l.trim() === "" && i > 0 && (arr[i - 1] ?? "").trim() === ""));
 }
 
 const ORDER: SectionKind[] = ["resumo", "experiencia", "formacao", "competencias", "certificacoes", "idiomas"];
@@ -128,7 +128,7 @@ export function generateAtsResume(text: string): string {
   for (const kind of ORDER) {
     const group = parsed.sections.filter((s) => s.kind === kind);
     const content = trimBlank(group.flatMap((s, i) => (i > 0 ? ["", ...s.lines] : s.lines)));
-    if (content.some((l) => l.trim())) blocks.push(`${group[0].title}\n${content.join("\n")}`);
+    if (content.some((l) => l.trim())) blocks.push(`${group[0]?.title ?? ""}\n${content.join("\n")}`);
   }
 
   for (const s of parsed.sections.filter((x) => x.kind === "outra")) {
