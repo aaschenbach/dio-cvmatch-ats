@@ -32,20 +32,15 @@ function isHeadingLine(raw: string): boolean {
   return s.length > 0 && s.length <= 60 && (/:$/.test(s) || /^[A-ZÀ-Ú0-9 /&-]{4,}$/.test(s));
 }
 
-/**
- * Siglas e termos técnicos destacados explicitamente na vaga que não estão no
- * dicionário (ex.: "SAP MM", "NR-10", "ABAP"). Critério conservador:
- * apenas tokens com 2–8 caracteres em MAIÚSCULAS ou com dígitos/símbolos técnicos,
- * excluindo termos genéricos e palavras comuns.
- */
+/** Extrai apenas siglas e códigos técnicos explicitamente permitidos. */
 // Somente códigos técnicos reconhecidos; siglas desconhecidas não são competências confiáveis.
 // Ampliar esta lista requer um caso real e um teste de regressão.
 const APPROVED_EXTRA_CODES = new Set(["ABAP", "COBIT", "ITSM", "NR-10", "NR-35"]);
 
 function explicitTokens(rawLine: string): string[] {
-  const tokens = rawLine.match(/[A-Za-zÀ-ú0-9+#.\\/-]+/g) ?? [];
+  const tokens = rawLine.match(/[A-Za-zÀ-ú0-9+#./-]+/g) ?? [];
   return tokens
-    .map((tok) => tok.replace(/^[.\\/-]+|[.\\/-]+$/g, ""))
+    .map((tok) => tok.replace(/^[./-]+|[./-]+$/g, ""))
     .filter((tok) => APPROVED_EXTRA_CODES.has(tok.toUpperCase()))
     .filter((tok) => !GENERIC_TERMS.has(normalizeText(tok)) && !STOPWORDS.has(normalizeText(tok)));
 }
