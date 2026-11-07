@@ -10,10 +10,10 @@ Todo o processamento ocorre no navegador (`src/lib/cvmatch`). Nenhum texto é en
 
 ## Extração de requisitos (`extract.ts`)
 Duas fontes, sempre a partir do texto literal da vaga:
-1. **Dicionário técnico** (`dictionary.ts`): linguagens, frameworks, bancos, cloud, metodologias, certificações e idiomas, com equivalências explícitas (JS ↔ JavaScript, TS ↔ TypeScript, K8s ↔ Kubernetes…).
-2. **Siglas destacadas** na vaga (2–8 caracteres em maiúsculas, ex.: ABAP, NR-10), excluindo termos genéricos (VR, CLT, PJ, TI…).
+1. **Dicionário de competências** (`dictionary.ts`): vocabulário de TI, vendas, marketing, RH, finanças, administração e operações, além de certificações e idiomas. Contém equivalências explícitas (JS ↔ JavaScript, TS ↔ TypeScript, K8s ↔ Kubernetes…).
+2. **Siglas técnicas explicitamente autorizadas** (ex.: ABAP, COBIT, ITSM, NR-10, NR-35). Siglas desconhecidas não são automaticamente promovidas a requisitos, para reduzir falsos positivos como códigos de vagas e localidades.
 
-Seções de benefícios/sobre a empresa são ignoradas. Termos compostos sobrepostos são resolvidos (React Native não conta como React isolado).
+Seções de benefícios/sobre a empresa são ignoradas. Termos compostos sobrepostos selecionados são resolvidos (React Native/React, SQL Server/SQL, Tailwind CSS/CSS). Itens de lista iniciados por marcadores como `- DRE` não são interpretados como títulos de seção.
 
 ## Classificação e pesos
 | Classificação | Gatilhos | Peso |
@@ -41,3 +41,8 @@ Palavras na própria linha têm precedência sobre o título da seção. Se o te
 - Termos fora do dicionário e que não sejam siglas não são reconhecidos.
 - Não há interpretação semântica (sinônimos não listados não casam).
 - A pontuação não representa nenhum ATS específico nem probabilidade de contratação.
+
+## Refinamentos e resultados de validação
+- [PR #1](https://github.com/aaschenbach/dio-cvmatch-ats/pull/1): ampliação de cobertura e redução de falsos positivos.
+- [PR #2](https://github.com/aaschenbach/dio-cvmatch-ats/pull/2): correção da interpretação de itens de lista em maiúsculas.
+- Testes manuais informados: Finanças 67%; Comercial 100%; Tailwind CSS 75%; regressão de TI 90%. O caso Tailwind CSS permanece divergente e requer investigação; os testes automatizados após os refinamentos ainda não foram confirmados.
