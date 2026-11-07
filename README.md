@@ -103,9 +103,7 @@ Esses resultados foram informados durante testes manuais e não equivalem à exe
 
 **Aplicação publicada no Lovable:** https://dio-cv-match.lovable.app/ (endereço informado pelo autor; disponibilidade pública ainda não verificada independentemente).
 
-**Capturas de tela:** _pendentes de inclusão no repositório, preferencialmente em `docs/screenshots/`._
-
-Para demonstrar a aplicação, registrar pelo menos a entrada da vaga/currículo, a tela de compatibilidade e a versão do currículo antes da exportação PDF. Não versionar currículos reais nem informações pessoais.
+**Capturas de tela:** cinco imagens de evidência estão disponíveis em [`docs/screenshots/`](docs/screenshots/): [01](docs/screenshots/screenshot-01.png), [02](docs/screenshots/screenshot-02.png), [03](docs/screenshots/screenshot-03.png), [04](docs/screenshots/screenshot-04.png) e [05](docs/screenshots/screenshot-05.png).
 
 ## Entrega DIO
 
