@@ -32,25 +32,17 @@ function isHeadingLine(raw: string): boolean {
   return s.length > 0 && s.length <= 60 && (/:$/.test(s) || /^[A-ZÀ-Ú0-9 /&-]{4,}$/.test(s));
 }
 
-/**
- * Siglas e termos técnicos destacados explicitamente na vaga que não estão no
- * dicionário (ex.: "SAP MM", "NR-10", "ABAP"). Critério conservador:
- * apenas tokens com 2–8 caracteres em MAIÚSCULAS ou com dígitos/símbolos técnicos,
- * excluindo termos genéricos e palavras comuns.
- */
+/** Extrai apenas siglas e códigos técnicos explicitamente permitidos. */
+// Somente códigos técnicos reconhecidos; siglas desconhecidas não são competências confiáveis.
+// Ampliar esta lista requer um caso real e um teste de regressão.
+const APPROVED_EXTRA_CODES = new Set(["ABAP", "COBIT", "ITSM", "NR-10", "NR-35"]);
+
 function explicitTokens(rawLine: string): string[] {
-  const out: string[] = [];
-  const tokens = rawLine.match(/[A-Za-zÀ-ú0-9+#.\-/]+/g) ?? [];
-  for (const tok of tokens) {
-    const clean = tok.replace(/^[.\-/]+|[.\-/]+$/g, "");
-    if (clean.length < 2 || clean.length > 8) continue;
-    const isAcronym = /^[A-Z][A-Z0-9+#-]{1,7}$/.test(clean) && /[A-Z]{2}/.test(clean);
-    if (!isAcronym) continue;
-    const norm = normalizeText(clean);
-    if (!norm || GENERIC_TERMS.has(norm) || STOPWORDS.has(norm)) continue;
-    out.push(clean);
-  }
-  return out;
+  const tokens = rawLine.match(/[A-Za-zÀ-ú0-9+#./-]+/g) ?? [];
+  return tokens
+    .map((tok) => tok.replace(/^[./-]+|[./-]+$/g, ""))
+    .filter((tok) => APPROVED_EXTRA_CODES.has(tok.toUpperCase()))
+    .filter((tok) => !GENERIC_TERMS.has(normalizeText(tok)) && !STOPWORDS.has(normalizeText(tok)));
 }
 
 /** Classificação de uma linha: palavras na própria linha têm precedência sobre a seção. */
@@ -122,6 +114,12 @@ export function extractRequirements(jobText: string): Requirement[] {
   if (map.has("SQL Server") && map.has("SQL")) {
     const stripped = normJob.replace(/sql server/g, " ");
     if (!containsTerm(stripped, "sql")) map.delete("SQL");
+  }
+
+  // Não pontuar CSS separadamente quando só aparece dentro de "Tailwind CSS".
+  if (map.has("Tailwind CSS") && map.has("CSS")) {
+    const stripped = normJob.replace(/tailwind css/g, " ");
+    if (!containsTerm(stripped, "css") && !containsTerm(stripped, "css3")) map.delete("CSS");
   }
 
   return [...map.values()].sort((a, b) =>
