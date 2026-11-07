@@ -101,7 +101,7 @@ Esses resultados foram informados durante testes manuais e não equivalem à exe
 
 ## Publicação e evidências
 
-**Endereço da aplicação publicada:** _pendente de inserir após confirmação do link público no Lovable._
+**Aplicação publicada no Lovable:** https://dio-cv-match.lovable.app/ (endereço informado pelo autor; disponibilidade pública ainda não verificada independentemente).
 
 **Capturas de tela:** _pendentes de inclusão no repositório, preferencialmente em `docs/screenshots/`._
 
