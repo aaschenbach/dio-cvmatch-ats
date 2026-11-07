@@ -74,7 +74,7 @@ describe("pontuação", () => {
 describe("cobertura multiprofissional e falsos positivos", () => {
   it("identifica requisitos financeiros descritivos", () => {
     const result = analyze(
-      "Requisitos obrigatórios:\n- Conciliação bancária\n- Fluxo de caixa\n- DRE",
+      ["Requisitos obrigatórios:", "- Conciliação bancária", "- Fluxo de caixa", "- DRE"].join("\n"),
       "Atuação em conciliação bancária e fluxo de caixa.",
     );
     expect(result.inconclusive).toBe(false);
@@ -83,7 +83,7 @@ describe("cobertura multiprofissional e falsos positivos", () => {
   });
   it("não transforma siglas administrativas ou códigos de vaga em competências", () => {
     const reqs = extractRequirements(
-      "Requisitos obrigatórios:\n- Excel e CRM\n- Atendimento B2B\n- VAGA-01, LATAM, PCD, PME, EUA",
+      ["Requisitos obrigatórios:", "- Excel e CRM", "- Atendimento B2B", "- VAGA-01, LATAM, PCD, PME, EUA"].join("\n"),
     );
     for (const tok of ["VAGA-01", "LATAM", "PCD", "PME", "EUA"]) {
       expect(reqs.some((r) => r.label === tok)).toBe(false);
@@ -91,7 +91,7 @@ describe("cobertura multiprofissional e falsos positivos", () => {
     expect(reqs.some((r) => r.label === "B2B")).toBe(true);
   });
   it("não pontua CSS duas vezes quando exigido apenas Tailwind CSS", () => {
-    const reqs = extractRequirements("Requisitos obrigatórios:\n- Tailwind CSS\n- Git\n- React");
+    const reqs = extractRequirements(["Requisitos obrigatórios:", "- Tailwind CSS", "- Git", "- React"].join("\n"));
     expect(reqs.some((r) => r.label === "Tailwind CSS")).toBe(true);
     expect(reqs.some((r) => r.label === "CSS")).toBe(false);
   });
