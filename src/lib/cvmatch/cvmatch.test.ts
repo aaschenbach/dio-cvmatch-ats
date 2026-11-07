@@ -71,6 +71,32 @@ describe("pontuação", () => {
   });
 });
 
+describe("cobertura multiprofissional e falsos positivos", () => {
+  it("identifica requisitos financeiros descritivos", () => {
+    const result = analyze(
+      "Requisitos obrigatórios:\n- Conciliação bancária\n- Fluxo de caixa\n- DRE",
+      "Atuação em conciliação bancária e fluxo de caixa.",
+    );
+    expect(result.inconclusive).toBe(false);
+    expect(result.score).toBe(67);
+    expect(result.missing.map((r) => r.label)).toContain("DRE");
+  });
+  it("não transforma siglas administrativas ou códigos de vaga em competências", () => {
+    const reqs = extractRequirements(
+      "Requisitos obrigatórios:\n- Excel e CRM\n- Atendimento B2B\n- VAGA-01, LATAM, PCD, PME, EUA",
+    );
+    for (const tok of ["VAGA-01", "LATAM", "PCD", "PME", "EUA"]) {
+      expect(reqs.some((r) => r.label === tok)).toBe(false);
+    }
+    expect(reqs.some((r) => r.label === "B2B")).toBe(true);
+  });
+  it("não pontua CSS duas vezes quando exigido apenas Tailwind CSS", () => {
+    const reqs = extractRequirements("Requisitos obrigatórios:\n- Tailwind CSS\n- Git\n- React");
+    expect(reqs.some((r) => r.label === "Tailwind CSS")).toBe(true);
+    expect(reqs.some((r) => r.label === "CSS")).toBe(false);
+  });
+});
+
 describe("currículo ATS", () => {
   const out = generateAtsResume(CV);
   it("preserva todas as linhas originais de conteúdo", () => {
