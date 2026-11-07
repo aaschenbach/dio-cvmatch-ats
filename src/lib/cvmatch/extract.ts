@@ -29,6 +29,8 @@ const NEUTRAL_SECTION_RE = /^(responsabilidades|atividades|atribuicoes|descricao
 /** Detecta se uma linha é um título de seção da vaga (curta, sem frase completa). */
 function isHeadingLine(raw: string): boolean {
   const s = raw.trim();
+  // Itens de lista são requisitos, mesmo quando escritos totalmente em maiúsculas.
+  if (/^(?:[-*•]|\d+[.)])\s+/.test(s)) return false;
   return s.length > 0 && s.length <= 60 && (/:$/.test(s) || /^[A-ZÀ-Ú0-9 /&-]{4,}$/.test(s));
 }
 
