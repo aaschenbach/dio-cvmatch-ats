@@ -28,3 +28,7 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+- CVMatch analysis, resume generation and PDF export run fully client-side as pure functions in `src/lib/cvmatch/` (UI in `src/components/cvmatch/`); no backend or external API, because the app promises local-only processing.
+- The resume generator must never drop or rewrite original lines; only section order, heading titles and bullet markers may change (enforced by tests in `src/lib/cvmatch/cvmatch.test.ts`).
